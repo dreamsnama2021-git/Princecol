@@ -846,3 +846,8 @@ small, .mega__cat, .fchip small, .viewer__count, .footer__pill { font-size: 12px
 }
 :root:not([data-theme='light']) .r2__card:hover .r2__kicker { color: rgba(255, 255, 255, 0.82); }
 .r2__card:hover .r2__go, .r2__card:focus-visible .r2__go { background: #fff; color: var(--r2-black); }
+/* Cards view header: same eyebrow + heading as the Showcase view, lede on the right */
+.r2__head { align-items: flex-end; }
+.r2__title-block { display: grid; gap: 22px; }
+.r2__title-block .display { margin: 0; }
+@media (max-width: 899px) { .r2__head { align-items: flex-start; } }

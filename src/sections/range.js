@@ -105,7 +105,7 @@ export function initRange2(products, icon) {
   wrap.id = 'range2';
   wrap.innerHTML = `
     <header class="r2__head">
-      <h2 class="r2__pill" id="range2Title">Product range</h2>
+      <div class="r2__title-block"><p class="mono eyebrow">03 — Product Range</p><h2 class="display" id="range2Title">Built for<br/>the bond line.</h2></div>
       <p class="r2__lede">Five Prince adhesives — synthetic resin and P.V.A. — formulated for furniture, packaging, interiors and flooring, each with the extra bonding strength our name stands for.</p>
     </header>
     <div class="r2__grid">${products.map((p, i) => {
