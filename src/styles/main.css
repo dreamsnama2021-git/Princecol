@@ -851,3 +851,97 @@ small, .mega__cat, .fchip small, .viewer__count, .footer__pill { font-size: 12px
 .r2__title-block { display: grid; gap: 22px; }
 .r2__title-block .display { margin: 0; }
 @media (max-width: 899px) { .r2__head { align-items: flex-start; } }
+
+/* =========================================================
+   HOMEPAGE — responsive refinements
+   ========================================================= */
+
+/* 1 + 8 · hero and final CTA: the two buttons always share one line */
+.hero__ctas { flex-wrap: nowrap; }
+.hero__ctas .btn { white-space: nowrap; flex: 0 1 auto; }
+@media (max-width: 560px) {
+  .hero__ctas { gap: 8px; width: 100%; }
+  .hero__ctas .btn { --h: 48px; padding: 0 14px; gap: 8px; font-size: 10.5px; letter-spacing: 0.08em; justify-content: center; flex: 1 1 auto; }
+  .btn__long { display: none; }
+}
+
+/* 2 · showcase: a shorter scroll on phones (same steps, less distance between them) */
+@media (max-width: 899px) {
+  .showcase { height: 430vh; }
+}
+
+/* 3 · product chapters on phones: a short description under the name, clamped so it never crowds the pack */
+@media (max-width: 899px) {
+  .chapter__tag {
+    display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; line-clamp: 3; overflow: hidden;
+    font-size: 14.5px; line-height: 1.5; max-width: 36ch; margin-top: 2px;
+  }
+}
+
+/* 6 · applications below desktop: swipe left / right, or use the arrows */
+@media (max-width: 1099px) {
+  .industries__pin { height: auto; flex-direction: column; }
+  .industries__head {
+    flex: none; display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 18px 24px;
+    padding: 90px var(--pad) 34px; border-right: 0; border-bottom: 0;
+  }
+  .industries__head .eyebrow, .industries__head .display { grid-column: 1 / -1; }
+  .industries__count { display: block; margin: 0; grid-column: 1; }
+  .ind-nav { grid-column: 2; display: flex; gap: 10px; }
+  .ind-nav__btn {
+    display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%;
+    border: 1px solid var(--line-2); background: transparent; color: var(--bone); cursor: pointer;
+    transition: background 0.35s var(--ease), color 0.35s var(--ease), opacity 0.3s;
+  }
+  .ind-nav__btn svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  .ind-nav__btn:hover:not(:disabled) { background: var(--bone); color: var(--ink); }
+  .ind-nav__btn:disabled { opacity: 0.3; cursor: default; }
+  .industries__track {
+    flex-direction: row; height: auto; overflow-x: auto; overscroll-behavior-x: contain;
+    scroll-snap-type: x mandatory; scrollbar-width: none; transform: none !important;
+    border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  }
+  .industries__track::-webkit-scrollbar { display: none; }
+  .ind {
+    flex: 0 0 min(64vw, 620px); height: auto; min-height: 0; scroll-snap-align: start;
+    grid-template-columns: 1fr; grid-template-rows: auto auto; border-right: 1px solid var(--line); border-bottom: 0;
+  }
+  .ind__body { padding: 40px 32px 0; gap: 16px; }
+  .ind__name { font-size: clamp(2rem, 6vw, 3.4rem); }
+  .ind__media { padding: 12px 0 30px; }
+  .ind__media img { width: 72%; max-height: 34vh; }
+  .ind-nav { display: flex; }
+}
+@media (max-width: 599px) {
+  .ind { flex-basis: 86vw; }
+  .ind__body { padding: 32px 22px 0; }
+}
+@media (min-width: 1100px) { .ind-nav { display: none; } }
+
+/* 7 · why prince on phones: two columns */
+@media (max-width: 899px) {
+  .why__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .feat { min-height: 0; padding: 20px 16px 22px; }
+  .feat__icon { width: 40px; height: 40px; margin: 18px 0 0; }
+  .feat__title { font-size: clamp(1.05rem, 4.6vw, 1.4rem); margin-top: 18px; overflow-wrap: anywhere; }
+  .feat__stat { font-size: 11px; margin-top: 8px; }
+}
+
+/* 8 · final CTA on phones: not a full screen any more */
+@media (max-width: 899px) {
+  .finale { height: auto; min-height: 0; padding: 110px 0 100px; }
+  .finale__content { gap: 22px; }
+}
+
+/* 9 · footer: logo red, light text (all pages share this footer) */
+.footer {
+  --ft-red: #b52b27;
+  --ink: var(--ft-red); --bone: #fff; --bone-2: rgba(255, 255, 255, 0.84); --steel: rgba(255, 255, 255, 0.72);
+  --line: rgba(255, 255, 255, 0.22); --line-2: rgba(255, 255, 255, 0.4);
+  background: var(--ft-red); color: #fff; border-top: 0;
+}
+.footer .nav__logo svg { fill: #fff; }
+.footer .nav__logo small, .footer .eyebrow { color: rgba(255, 255, 255, 0.75); }
+.footer__cols a:hover, .footer__base a:hover { color: #fff; text-decoration: underline; text-underline-offset: 4px; }
+.footer__pill:hover { background: #fff; color: var(--ft-red); }
+.footer__mark { -webkit-text-stroke: 1px rgba(255, 255, 255, 0.38); }

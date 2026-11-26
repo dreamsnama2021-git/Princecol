@@ -133,7 +133,8 @@ export function initIndustries(industries, products, renders) {
 
   const idx = document.getElementById('indIdx');
   const mm = gsap.matchMedia();
-  mm.add('(min-width: 900px)', () => {
+  // desktop: pinned horizontal scroll driven by the page scroll
+  mm.add('(min-width: 1100px)', () => {
     const panels = gsap.utils.toArray('.ind');
     // clientWidth excludes the scrollbar, so the last panel lands fully in view
     // measure the last panel's real right edge (independent of current offset), minus the visible width without scrollbar
@@ -158,10 +159,42 @@ export function initIndustries(industries, products, renders) {
       gsap.from(panel.querySelectorAll('.ind__body > *'), { y: 40, opacity: 0, stagger: 0.08, duration: 1, ease: 'expo.out', scrollTrigger: { trigger: panel, containerAnimation: scroll, start: 'left 65%' } });
     });
   });
-  mm.add('(max-width: 899px)', () => {
+  // tablets & phones: a swipeable carousel (native horizontal scroll with snap) + prev / next arrows
+  mm.add('(max-width: 1099px)', () => {
+    const panels = gsap.utils.toArray('.ind');
     gsap.utils.toArray('.ind').forEach((panel) => {
-      gsap.to(panel.querySelectorAll('.m-draw'), { strokeDashoffset: 0, duration: 1.6, stagger: 0.12, ease: 'power2.inOut', scrollTrigger: { trigger: panel, start: 'top 70%' } });
-      gsap.from(panel.querySelector('.ind__media img'), { y: 80, rotate: 8, duration: 1.4, ease: 'expo.out', scrollTrigger: { trigger: panel, start: 'top 60%' } });
+      gsap.to(panel.querySelectorAll('.m-draw'), { strokeDashoffset: 0, duration: 1.6, stagger: 0.12, ease: 'power2.inOut', scrollTrigger: { trigger: '#industries', start: 'top 60%' } });
     });
+    const nav = document.createElement('div');
+    nav.className = 'ind-nav';
+    nav.innerHTML = `
+      <button type="button" class="ind-nav__btn" data-dir="-1" aria-label="Previous application"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
+      <button type="button" class="ind-nav__btn" data-dir="1" aria-label="Next application"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>`;
+    const head = document.querySelector('.industries__head');
+    head.appendChild(nav);
+    const current = () => {
+      const left = track.scrollLeft;
+      let best = 0, bestD = Infinity;
+      panels.forEach((pn, k) => { const d = Math.abs(pn.offsetLeft - track.offsetLeft - left); if (d < bestD) { bestD = d; best = k; } });
+      return best;
+    };
+    const update = () => {
+      const i = current();
+      idx.textContent = String(i + 1).padStart(2, '0');
+      const [prev, next] = nav.querySelectorAll('button');
+      prev.disabled = track.scrollLeft < 4;
+      next.disabled = track.scrollLeft + track.clientWidth >= track.scrollWidth - 4;
+    };
+    const go = (dir) => {
+      const i = Math.max(0, Math.min(panels.length - 1, current() + dir));
+      track.scrollTo({ left: panels[i].offsetLeft - track.offsetLeft, behavior: 'smooth' });
+    };
+    const onClick = (e) => { const b = e.target.closest('button[data-dir]'); if (b) go(Number(b.dataset.dir)); };
+    let raf = 0;
+    const onScroll = () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(update); };
+    nav.addEventListener('click', onClick);
+    track.addEventListener('scroll', onScroll, { passive: true });
+    update();
+    return () => { nav.remove(); track.removeEventListener('scroll', onScroll); };
   });
 }
