@@ -5,7 +5,7 @@ import Lenis from 'lenis';
 import { brand, products, industries, stats, capabilities, features } from './data/content.js';
 import { Stage } from './gl/stage.js';
 import { initShowcase } from './sections/showcase.js';
-import { initRange, initRange2 } from './sections/range.js';
+import { initRange, initRange2, initRangeSwitch } from './sections/range.js';
 import { icon } from './site/icons.js';
 import { initStory } from './sections/story.js';
 import { initIndustries } from './sections/industries.js';
@@ -76,11 +76,14 @@ async function boot() {
   document.querySelectorAll('.hero [data-split]').forEach((el) => splitChars(el, { masked: true }));
   splitChars(document.querySelector('.finale__title'), { masked: true });
   if (stage) initShowcase(stage, products);
-  // Product Range: option 1 (mosaic + drawer) by default; ?range=2 shows option 2 (masonry cards), kept for the visit
+  // Product Range: both layouts are built; the on-page "View" switch shows Showcase (option 1, default)
+  // or Cards (option 2). ?range=1|2 also picks one; the choice is kept for the visit.
+  initRange(products, renders, lenis);
+  const revealV2 = initRange2(products, icon);
   const rq = new URLSearchParams(location.search).get('range');
-  if (rq === '1' || rq === '2') sessionStorage.setItem('pa-range', rq);
-  if (sessionStorage.getItem('pa-range') === '2') initRange2(products, icon);
-  else initRange(products, renders, lenis);
+  let rangeView = rq === '1' || rq === '2' ? rq : null;
+  try { rangeView = rangeView || sessionStorage.getItem('pa-range'); } catch (e) { /* storage blocked */ }
+  initRangeSwitch(rangeView === '2' ? '2' : '1', revealV2);
   initStory(stats, capabilities);
   initIndustries(industries, products, renders);
   initWhy(features);

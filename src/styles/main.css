@@ -810,3 +810,39 @@ small, .mega__cat, .fchip small, .viewer__count, .footer__pill { font-size: 12px
   .r2__media, .r2__col--flip .r2__media { aspect-ratio: 4 / 3; }
   .r2__media img { padding: 8% 20%; }
 }
+
+/* Product Range — on-page layout switch (Showcase = option 1, Cards = option 2) */
+.range:not(.is-v2) > .r2 { display: none; }
+.range.is-v2 > .section__head, .range.is-v2 > #rangeGrid { display: none; }
+.rswitch { display: flex; justify-content: flex-end; align-items: center; gap: 14px; margin-bottom: clamp(24px, 4vh, 44px); }
+.rswitch__label { color: var(--steel); }
+.rswitch__group { display: inline-flex; gap: 4px; padding: 4px; border: 1px solid var(--line-2); border-radius: 999px; }
+.rswitch button {
+  display: inline-flex; align-items: center; gap: 8px; padding: 9px 16px; border: 0; border-radius: 999px;
+  background: transparent; color: var(--bone-2); cursor: pointer;
+  font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; line-height: 1;
+  transition: background 0.35s var(--ease), color 0.35s var(--ease);
+}
+.rswitch button svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.4; }
+.rswitch button:hover { color: var(--bone); }
+.rswitch button[aria-pressed='true'] { background: var(--bone); color: var(--ink); }
+.rswitch button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+@media (max-width: 599px) {
+  .rswitch { justify-content: space-between; }
+  .rswitch button { padding: 9px 13px; }
+}
+
+/* Product Range option 2 — text card colours (logo red, like the About "Why choose us" cards)
+   light: red card → black on hover · dark: white card → red on hover */
+.range--v2 { --r2-red: #b52b27; --r2-black: #141416; }
+.r2__pill { background: var(--r2-black); color: #f4f2ee; }
+:root:not([data-theme='light']) .r2__pill { background: #f4f2ee; color: var(--r2-black); }
+.r2__card { transition: translate 0.5s var(--ease), box-shadow 0.5s var(--ease), background-color 0.45s var(--ease), color 0.45s var(--ease); }
+[data-theme='light'] .r2__card { background: var(--r2-red); color: #fff; --r2-ink-2: rgba(255, 255, 255, 0.86); --r2-chip: rgba(255, 255, 255, 0.16); }
+[data-theme='light'] .r2__card:hover, [data-theme='light'] .r2__card:focus-visible { background: var(--r2-black); }
+[data-theme='light'] .r2__kicker { color: rgba(255, 255, 255, 0.82); }
+:root:not([data-theme='light']) .r2__card:hover, :root:not([data-theme='light']) .r2__card:focus-visible {
+  background: var(--r2-red); color: #fff; --r2-ink-2: rgba(255, 255, 255, 0.86); --r2-chip: rgba(255, 255, 255, 0.16);
+}
+:root:not([data-theme='light']) .r2__card:hover .r2__kicker { color: rgba(255, 255, 255, 0.82); }
+.r2__card:hover .r2__go, .r2__card:focus-visible .r2__go { background: #fff; color: var(--r2-black); }
