@@ -1,35 +1,9 @@
-// Products — live 3D line-up hero, cinematic per-product stages with a shifting
+// Products — banner hero, cinematic per-product stages with a shifting
 // background, and a "find your bond" filter driven only by stated product data.
-import { bootPage, heroIntro, reduced, fontsReady } from '../site/boot.js';
+import { bootPage, heroIntro, reduced } from '../site/boot.js';
 import { tilt } from '../site/components.js';
 import { products, applications, properties, productFeaturesFull } from '../data/site.js';
 import { splitChars } from '../ui/split.js';
-import { Stage } from '../gl/stage.js';
-
-async function lineupHero(gsap, ScrollTrigger) {
-  await fontsReady();
-  const canvas = document.getElementById('prodgl');
-  let stage;
-  try { stage = new Stage(canvas, products); } catch (e) { document.documentElement.classList.add('no-gl'); return; }
-  const P = products.map((p) => stage.items[p.id].proxy);
-  const m = stage.mobile;
-  // an arc of five packs across the top of the hero
-  P.forEach((pr, i) => Object.assign(pr, {
-    x: (i - 2) * (m ? 1.55 : 1.85), y: (m ? 1.05 : 0.62) + Math.abs(i - 2) * -0.08, z: -Math.abs(i - 2) * 0.55,
-    rx: 0.08, ry: -0.18 + (i - 2) * 0.04, rz: 0, s: m ? 0.55 : 0.6, ls: 1,
-  }));
-  stage.global.intro = 0; stage.global.idle = 1; stage.global.glow = 0.4;
-  stage.renderer.compile(stage.scene, stage.camera);
-  stage.start();
-  gsap.to(stage.global, { intro: 1, duration: 2.2, ease: 'expo.out', delay: 0.3 });
-
-  if (!reduced) {
-    const tl = gsap.timeline({ scrollTrigger: { trigger: '.phero--products', start: 'top top', end: 'bottom top', scrub: 0.4 } });
-    P.forEach((pr, i) => tl.to(pr, { x: pr.x * 1.45, y: pr.y + 1.3, z: pr.z - 2.5, ry: pr.ry + (i - 2) * 0.35, ease: 'none' }, 0));
-    tl.to(stage.global, { glow: 0.1, ease: 'none' }, 0);
-  }
-  ScrollTrigger.create({ trigger: '.phero--products', start: 'top bottom', end: 'bottom top', onToggle: (s) => { stage.active = s.isActive; } });
-}
 
 function collection(gsap, ScrollTrigger) {
   const coll = document.querySelector('.pcoll');
@@ -115,9 +89,8 @@ function finder(gsap) {
   gsap.from(grid.children, { y: 50, opacity: 0, stagger: 0.07, duration: 1, ease: 'expo.out', scrollTrigger: { trigger: grid, start: 'top 85%' } });
 }
 
-bootPage(async ({ gsap, ScrollTrigger }) => {
+bootPage(({ gsap, ScrollTrigger }) => {
   heroIntro(document.querySelector('.phero'));
-  await lineupHero(gsap, ScrollTrigger);
   collection(gsap, ScrollTrigger);
   finder(gsap);
 });

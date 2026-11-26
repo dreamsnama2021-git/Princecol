@@ -1001,7 +1001,7 @@ body[data-page='about'] .cta-band__title { font-size: clamp(2.4rem, 5.4vw, 6rem)
 .ghero .eyebrow::after { content: ''; width: 28px; height: 1px; background: currentColor; }
 .ghero .phero__title { max-width: 21ch; margin-inline: auto; }
 .ghero .phero__foot { justify-content: center; }
-.ghero .phero__lede { margin-inline: auto; }
+.ghero .phero__lede { margin-inline: auto; max-width: 540px; }
 @media (max-width: 899px) {
   .ghero { min-height: 0; padding-top: 130px; padding-bottom: 70px; }
 }
