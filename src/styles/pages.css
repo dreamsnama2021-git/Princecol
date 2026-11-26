@@ -951,3 +951,75 @@ body[data-page='about'] .cta-band__title { font-size: clamp(2.4rem, 5.4vw, 6rem)
 @media (min-width: 900px) {
   body[data-page] main { --pad: clamp(40px, 8vw, 150px); }
 }
+
+/* Gallery: compact collage — normal-size tiles on a tight grid, a few larger tiles for rhythm.
+   Product photos sit whole inside their tile (contain), never cropped. */
+.gal__grid {
+  columns: auto; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-auto-rows: clamp(84px, 7.4vw, 124px); grid-auto-flow: dense; gap: clamp(10px, 1vw, 16px);
+}
+.gitem { margin: 0; grid-row: span 2; min-height: 0; }
+.gitem:nth-child(7n + 1) { grid-column: span 2; grid-row: span 3; }  /* feature tile */
+.gitem:nth-child(7n + 4) { grid-row: span 3; }                       /* tall tile */
+.gitem--wide { grid-column: span 2; grid-row: span 2; }
+.gitem button { height: 100%; }
+.gitem img { width: 100%; height: 100%; object-fit: contain; padding: 6%; }
+.gitem--cut img { padding: 0; }
+@media (max-width: 1199px) { .gal__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (max-width: 899px)  { .gal__grid { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: 96px; gap: 10px; } }
+@media (max-width: 599px)  {
+  .gal__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-auto-rows: 84px; }
+  .gitem:nth-child(7n + 4) { grid-row: span 2; }
+}
+
+/* Gallery hero v2: text left, three framed product photos right (one large, two small and tilted) */
+.ghero { grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); align-items: center; column-gap: clamp(32px, 5vw, 96px); padding-top: 130px; padding-bottom: 10vh; }
+.ghero .phero__body { grid-column: 1; grid-row: 1; }
+.ghero .phero__title { max-width: 12ch; }
+.ghero__stack { grid-column: 2; grid-row: 1; position: relative; width: 100%; max-width: 620px; justify-self: end; aspect-ratio: 1 / 1; max-height: 72vh; }
+.ghero__glow { position: absolute; inset: 8%; border-radius: 50%; background: radial-gradient(closest-side, color-mix(in srgb, var(--accent) 16%, transparent), transparent); filter: blur(10px); }
+.gcard { position: absolute; margin: 0; padding: 5%; background: #fff; border-radius: 18px; overflow: hidden; box-shadow: 0 34px 60px -32px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(0, 0, 0, 0.04); }
+.gcard img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.gcard--0 { left: 22%; top: 6%; width: 54%; height: 74%; z-index: 2; }
+.gcard--1 { left: 0; bottom: 4%; width: 33%; height: 42%; rotate: -6deg; z-index: 3; }
+.gcard--2 { right: 0; top: 2%; width: 30%; height: 36%; rotate: 6deg; z-index: 1; }
+.ghero .hero__scroll { display: none; }
+@media (max-width: 899px) {
+  .ghero { grid-template-columns: 1fr; row-gap: 36px; min-height: 0; padding-top: 110px; padding-bottom: 64px; align-items: start; }
+  .ghero__stack { grid-column: 1; grid-row: 1; justify-self: center; max-width: 440px; max-height: none; }
+  .ghero .phero__body { grid-row: 2; }
+}
+
+/* Gallery hero v3: text only, centred */
+.ghero {
+  grid-template-columns: 1fr; justify-items: center; align-items: center; text-align: center;
+  min-height: 78vh; min-height: 78svh; padding-top: 140px; padding-bottom: 10vh;
+  background: radial-gradient(60% 55% at 50% 45%, color-mix(in srgb, var(--accent) 10%, transparent), transparent 70%), var(--ink);
+}
+.ghero .phero__body { grid-column: 1; grid-row: auto; justify-items: center; }
+.ghero .eyebrow { justify-content: center; }
+.ghero .eyebrow::after { content: ''; width: 28px; height: 1px; background: currentColor; }
+.ghero .phero__title { max-width: 21ch; margin-inline: auto; }
+.ghero .phero__foot { justify-content: center; }
+.ghero .phero__lede { margin-inline: auto; }
+@media (max-width: 899px) {
+  .ghero { min-height: 0; padding-top: 130px; padding-bottom: 70px; }
+}
+
+/* Gallery hero v4: workshop banner behind the centred text (rounded card under the nav).
+   A dark shade keeps the white text readable on the photo in both themes. */
+.ghero { position: relative; background: var(--ink); min-height: 80vh; min-height: 80svh; padding-top: 150px; padding-bottom: 12vh; }
+.ghero__banner { position: absolute; inset: 92px var(--pad) 28px; z-index: -1; border-radius: 24px; overflow: hidden; }
+.ghero__banner img { width: 100%; height: 100%; object-fit: cover; object-position: 55% 45%; }
+.ghero__shade { position: absolute; inset: 0; background:
+  radial-gradient(70% 80% at 50% 50%, rgba(8, 8, 10, 0.62), rgba(8, 8, 10, 0.38) 70%, rgba(8, 8, 10, 0.3)),
+  linear-gradient(180deg, rgba(8, 8, 10, 0.15), rgba(8, 8, 10, 0.45)); }
+.ghero .phero__body { padding: 0 clamp(16px, 4vw, 60px); }
+.ghero .eyebrow { color: rgba(255, 255, 255, 0.82); }
+.ghero .phero__title { color: #fff; text-shadow: 0 2px 30px rgba(0, 0, 0, 0.35); }
+.ghero .phero__lede { color: rgba(255, 255, 255, 0.9); }
+@media (max-width: 899px) {
+  .ghero { min-height: 0; padding-top: 140px; padding-bottom: 80px; }
+  .ghero__banner { inset: 84px 12px 20px; border-radius: 18px; }
+  .ghero__banner img { object-position: 52% 50%; }
+}
