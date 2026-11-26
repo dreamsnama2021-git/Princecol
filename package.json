@@ -1,0 +1,20 @@
+{
+  "name": "tensyl-adhesives",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "TENSYL — cinematic adhesive brand experience",
+  "scripts": {
+    "dev": "vite --port 5173 --strictPort",
+    "build": "vite build",
+    "preview": "vite preview --port 4173"
+  },
+  "dependencies": {
+    "gsap": "^3.12.5",
+    "lenis": "^1.1.13",
+    "three": "^0.170.0"
+  },
+  "devDependencies": {
+    "vite": "^6.4.6"
+  }
+}
