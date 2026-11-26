@@ -5,7 +5,8 @@ import Lenis from 'lenis';
 import { brand, products, industries, stats, capabilities, features } from './data/content.js';
 import { Stage } from './gl/stage.js';
 import { initShowcase } from './sections/showcase.js';
-import { initRange } from './sections/range.js';
+import { initRange, initRange2 } from './sections/range.js';
+import { icon } from './site/icons.js';
 import { initStory } from './sections/story.js';
 import { initIndustries } from './sections/industries.js';
 import { initWhy } from './sections/why.js';
@@ -75,7 +76,11 @@ async function boot() {
   document.querySelectorAll('.hero [data-split]').forEach((el) => splitChars(el, { masked: true }));
   splitChars(document.querySelector('.finale__title'), { masked: true });
   if (stage) initShowcase(stage, products);
-  initRange(products, renders, lenis);
+  // Product Range: option 1 (mosaic + drawer) by default; ?range=2 shows option 2 (masonry cards), kept for the visit
+  const rq = new URLSearchParams(location.search).get('range');
+  if (rq === '1' || rq === '2') sessionStorage.setItem('pa-range', rq);
+  if (sessionStorage.getItem('pa-range') === '2') initRange2(products, icon);
+  else initRange(products, renders, lenis);
   initStory(stats, capabilities);
   initIndustries(industries, products, renders);
   initWhy(features);

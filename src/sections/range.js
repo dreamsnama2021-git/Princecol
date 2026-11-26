@@ -87,3 +87,53 @@ export function initRange(products, renders, lenis) {
   drawer.querySelectorAll('.btn').forEach((b) => b.addEventListener('click', () => close()));
   window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && drawer.classList.contains('is-open')) close(); });
 }
+
+/* =========================================================
+   OPTION 2 — masonry "service card" layout.
+   One column per product: a photo tile + a solid text tile (title, description,
+   icon, arrow). Columns alternate photo-first / text-first so the edges stagger.
+   Every tile links to the product page.
+   ========================================================= */
+const R2_ICON = { princecol: 'drop', princebond: 'flame', princelite: 'layers', princeglu: 'chair', princegrip: 'bond' };
+const titleCase = (s) => s.toLowerCase().replace(/(^|\s)\S/g, (c) => c.toUpperCase());
+
+export function initRange2(products, icon) {
+  const section = document.getElementById('products');
+  const grid = document.getElementById('rangeGrid');
+  section.classList.add('range--v2');
+  const head = section.querySelector('.section__head');
+  head.className = 'r2__head';
+  head.innerHTML = `
+    <h2 class="r2__pill" id="rangeTitle">Product range</h2>
+    <p class="r2__lede">Five Prince adhesives — synthetic resin and P.V.A. — formulated for furniture, packaging, interiors and flooring, each with the extra bonding strength our name stands for.</p>`;
+  grid.className = 'r2__grid';
+  grid.innerHTML = products.map((p, i) => {
+    const name = titleCase(p.code);
+    const media = `
+      <a class="r2__tile r2__media" href="${p.url}" style="--c:${p.accent}" aria-label="${name} — view product">
+        <img src="${p.drumImg}" alt="${name} ${p.shape === 'pail' ? 'bucket' : 'drum'}" loading="lazy" decoding="async" width="470" height="590" />
+        <span class="r2__go r2__go--ghost" aria-hidden="true">${ARROW}</span>
+      </a>`;
+    const text = `
+      <a class="r2__tile r2__card" href="${p.url}" style="--c:${p.accent}">
+        <span class="r2__kicker mono">${String(i + 1).padStart(2, '0')} — ${p.category || p.chemistry}</span>
+        <h3 class="r2__title">${name}</h3>
+        <p class="r2__text">${p.description}</p>
+        <span class="r2__foot">
+          <span class="r2__icon" aria-hidden="true">${icon(R2_ICON[p.id] || 'bond', 'r2__svg')}</span>
+          <span class="r2__go" aria-hidden="true">${ARROW}</span>
+        </span>
+      </a>`;
+    return `<div class="r2__col${i % 2 ? ' r2__col--flip' : ''}">${i % 2 ? text + media : media + text}</div>`;
+  }).join('');
+
+  // reveal: tiles rise in column by column
+  gsap.utils.toArray('.r2__col').forEach((col, i) => {
+    gsap.from(col.children, {
+      y: 60, opacity: 0, duration: 1, ease: 'expo.out', stagger: 0.12, delay: (i % 5) * 0.06,
+      scrollTrigger: { trigger: col, start: 'top 88%' },
+    });
+  });
+  gsap.from('.r2__head > *', { y: 30, opacity: 0, duration: 0.9, ease: 'power3.out', stagger: 0.1, scrollTrigger: { trigger: '.r2__head', start: 'top 85%' } });
+}
+const ARROW = '<svg viewBox="0 0 24 24"><path d="M8 16L16 8M9 8h7v7"/></svg>';
