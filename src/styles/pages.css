@@ -1053,3 +1053,28 @@ body[data-page='about'] .cta-band__title { font-size: clamp(2.4rem, 5.4vw, 6rem)
   .ghero--contact .phero__foot { position: relative; }
   .ghero--contact .quick { position: absolute; top: calc(100% + 26px); left: 0; right: 0; }
 }
+
+/* PRODUCTS v3 — collection uses the same side space as every other page (content runs pad to pad)
+   and the same type scale (heading like product-page headings, 19px lead, 16–18px facts). */
+@media (min-width: 900px) {
+  .pslide, .pslide--flip { max-width: none; grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr); column-gap: clamp(40px, 5vw, 80px); }
+  .pslide--flip { grid-template-columns: minmax(0, 1.08fr) minmax(0, 0.92fr); }
+  .pslide .pslide__media { justify-self: start; max-width: 600px; }
+  .pslide--flip .pslide__media { justify-self: end; }
+  .pslide .pslide__info, .pslide--flip .pslide__info { justify-self: stretch; max-width: none; }
+  .pslide--flip .pslide__info { justify-self: stretch; }
+}
+.pslide__info { gap: 18px; }
+.pslide__n { font-size: 12.5px; }
+.pslide__name { font-size: clamp(2.2rem, 3.8vw, 4.2rem); line-height: 0.92; }
+.pslide__sub { font-size: clamp(1rem, 1.25vw, 1.3rem); letter-spacing: 0.01em; }
+.pslide__desc { font-size: clamp(16px, 1.2vw, 19px); line-height: 1.6; max-width: 62ch; }
+.pslide__facts dt { font-size: 12.5px; }
+.pslide__facts dd { font-size: clamp(16px, 1.1vw, 18px); }
+.pslide__btn { --h: 52px; padding: 0 24px; }
+@media (max-width: 899px) {
+  .pslide__name { font-size: clamp(2.2rem, 10vw, 3rem); }
+}
+
+/* Products page: no per-product colour wash — neutral background, no coloured glow behind each pack */
+.pcoll .pslide__halo { display: none; }

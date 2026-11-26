@@ -1,4 +1,4 @@
-// Products — banner hero, cinematic per-product stages with a shifting
+// Products — banner hero, cinematic per-product stages on a neutral
 // background, and a "find your bond" filter driven only by stated product data.
 import { bootPage, heroIntro, reduced } from '../site/boot.js';
 import { tilt } from '../site/components.js';
@@ -8,18 +8,6 @@ import { splitChars } from '../ui/split.js';
 function collection(gsap, ScrollTrigger) {
   const coll = document.querySelector('.pcoll');
   const idx = document.getElementById('collIdx');
-  // two stacked glow layers: set the new colour on the hidden one, then cross-fade (opacity only — no repaint)
-  const tints = [...coll.querySelectorAll('.pcoll__tint i')];
-  let front = 0, currentTint = '';
-  const swapTint = (hex) => {
-    if (hex === currentTint) return;
-    currentTint = hex;
-    const next = tints[1 - front];
-    next.style.setProperty('--tint', `${hex}55`);
-    gsap.to(next, { opacity: 1, duration: 0.9, ease: 'power2.out' });
-    gsap.to(tints[front], { opacity: 0, duration: 0.9, ease: 'power2.out' });
-    front = 1 - front;
-  };
   document.querySelectorAll('.pslide').forEach((slide, i) => {
     const name = slide.querySelector('.pslide__name a');
     splitChars(name, { masked: true });
@@ -35,12 +23,11 @@ function collection(gsap, ScrollTrigger) {
       gsap.fromTo(slide.querySelector('.pslide__ghost'), { xPercent: i % 2 ? -10 : 10 }, { xPercent: i % 2 ? 10 : -10, ease: 'none', scrollTrigger: { trigger: slide, start: 'top bottom', end: 'bottom top', scrub: 0.4 } });
       gsap.fromTo(media.querySelector('img'), { yPercent: 6 }, { yPercent: -6, ease: 'none', scrollTrigger: { trigger: slide, start: 'top bottom', end: 'bottom top', scrub: 0.4 } });
     }
-    // dynamic background: the whole collection takes on the product's colour
+    // keep the (hidden) collection counter in step with the product in view
     ScrollTrigger.create({
       trigger: slide, start: 'top 55%', end: 'bottom 55%',
       onToggle: (s) => {
         if (!s.isActive) return;
-        swapTint(slide.dataset.accent);
         idx.textContent = String(i + 1).padStart(2, '0');
       },
     });
