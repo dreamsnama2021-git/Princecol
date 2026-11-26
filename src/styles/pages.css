@@ -1023,3 +1023,33 @@ body[data-page='about'] .cta-band__title { font-size: clamp(2.4rem, 5.4vw, 6rem)
   .ghero__banner { inset: 84px 12px 20px; border-radius: 18px; }
   .ghero__banner img { object-position: 52% 50%; }
 }
+
+
+/* Products hero: same full dark shade as Gallery; a shorter card so the packs at both edges stay in frame,
+   and the text kept inside the empty middle of the banner */
+.ghero--packs .ghero__banner img { object-position: 50% 45%; }
+@media (min-width: 900px) {
+}
+
+/* Contact hero: same full dark shade and white text as Gallery, plus the Call / WhatsApp / Email buttons */
+.ghero--contact .phero__body { --bone: #fff; --line-2: rgba(255, 255, 255, 0.55); --ink: #121214; }
+.ghero--contact .phero__foot { flex-direction: column; align-items: center; gap: 26px; }
+.ghero--contact .quick { justify-content: center; flex-wrap: nowrap; }
+.ghero--contact .quick .btn { white-space: nowrap; }
+.ghero--contact .quick .btn--solid { color: #121214; }
+.ghero--contact .quick .btn--line { color: #fff; }
+.ghero--contact .quick .btn--line:hover { color: #121214; }
+@media (max-width: 599px) {
+  .ghero--contact .quick { gap: 6px; }
+  .ghero--contact .quick .btn { --h: 46px; padding: 0 12px; font-size: 10.5px; letter-spacing: 0.06em; }
+}
+/* all four banner heroes share one size: a little less inner padding so About's longer text fits the same 80vh */
+@media (min-width: 900px) { .ghero { padding-top: 128px; padding-bottom: 8vh; } }
+/* every banner hero places its text exactly like Gallery: same heading size and width,
+   description on two lines, block centred in the banner */
+.ghero .phero__lede { max-width: 640px; }
+@media (min-width: 900px) {
+  /* Contact's buttons sit under the description without pushing the text up */
+  .ghero--contact .phero__foot { position: relative; }
+  .ghero--contact .quick { position: absolute; top: calc(100% + 26px); left: 0; right: 0; }
+}

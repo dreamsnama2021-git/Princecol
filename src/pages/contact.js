@@ -1,14 +1,12 @@
-// Contact — strand hero, verified contact cards, enquiry form (src/site/form.js),
+// Contact — banner hero, verified contact cards, enquiry form (src/site/form.js),
 // lazily loaded Google Maps embeds for the office and factory (from princecol.com).
 import { bootPage, heroIntro } from '../site/boot.js';
 import { staggers } from '../site/components.js';
-import { initFinale } from '../sections/finale.js';
 import { brand, productBySlug } from '../data/site.js';
 
 bootPage(({ gsap, ScrollTrigger, lenis }) => {
   const hero = document.querySelector('.phero');
   heroIntro(hero);
-  initFinale(hero, hero.querySelector('.contact-hero__strands'));
   staggers();
 
   // ?product=prince-grip pre-selects the product (links from product pages / mega menu)
