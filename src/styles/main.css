@@ -945,3 +945,9 @@ small, .mega__cat, .fchip small, .viewer__count, .footer__pill { font-size: 12px
 .footer__cols a:hover, .footer__base a:hover { color: #fff; text-decoration: underline; text-underline-offset: 4px; }
 .footer__pill:hover { background: #fff; color: var(--ft-red); }
 .footer__mark { -webkit-text-stroke: 1px rgba(255, 255, 255, 0.38); }
+/* applications carousel (below desktop): arrows under the cards on the right, no 01 / 06 counter */
+@media (max-width: 1099px) {
+  .industries__count { display: none; }
+  .industries__head { display: flex; flex-direction: column; gap: 22px; }
+  .ind-nav { justify-content: flex-end; padding: 22px var(--pad) 40px; }
+}

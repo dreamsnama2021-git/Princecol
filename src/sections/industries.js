@@ -170,8 +170,8 @@ export function initIndustries(industries, products, renders) {
     nav.innerHTML = `
       <button type="button" class="ind-nav__btn" data-dir="-1" aria-label="Previous application"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button>
       <button type="button" class="ind-nav__btn" data-dir="1" aria-label="Next application"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button>`;
-    const head = document.querySelector('.industries__head');
-    head.appendChild(nav);
+    // arrows sit under the cards, bottom right
+    track.after(nav);
     const current = () => {
       const left = track.scrollLeft;
       let best = 0, bestD = Infinity;
