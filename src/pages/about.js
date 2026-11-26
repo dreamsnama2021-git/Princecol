@@ -1,23 +1,11 @@
-// About Us — product-podium banner, who we are (split), horizontal journey,
+// About Us — banner hero, who we are (split), horizontal journey,
 // vision & mission statements.
 import { bootPage, heroIntro, reduced } from '../site/boot.js';
 import { parallax, revealImages, counters, staggers, drawIcons } from '../site/components.js';
 import { journey } from '../data/site.js';
 
 bootPage(({ gsap }) => {
-  heroIntro(document.querySelector('.abn'), { delay: 0.4 });
-  // banner: the three packs settle onto the podium, then float gently
-  gsap.timeline({ delay: 0.55, defaults: { ease: 'expo.out' } })
-    .from('.abn__ring, .abn__floor', { scaleX: 0.3, opacity: 0, duration: 1.4 })
-    .from('.abn__p--c', { y: 80, opacity: 0, duration: 1.5 }, 0.1)
-    .from('.abn__p--l', { x: -60, y: 40, opacity: 0, duration: 1.5 }, 0.25)
-    .from('.abn__p--r', { x: 60, y: 40, opacity: 0, duration: 1.5 }, 0.35);
-  if (!reduced) {
-    gsap.to('.abn__p--c', { y: -10, duration: 3.2, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 2 });
-    gsap.to('.abn__p--l', { y: -7, duration: 3.8, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 2.3 });
-    gsap.to('.abn__p--r', { y: -8, duration: 3.5, ease: 'sine.inOut', yoyo: true, repeat: -1, delay: 2.1 });
-    gsap.to('.abn__stage', { yPercent: -10, ease: 'none', scrollTrigger: { trigger: '.abn', start: 'top top', end: 'bottom top', scrub: 0.4 } });
-  }
+  heroIntro(document.querySelector('.ghero'));
 
   parallax(); revealImages(); counters(); staggers();
 
