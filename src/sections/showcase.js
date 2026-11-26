@@ -147,18 +147,11 @@ export function initShowcase(stage, products) {
     // chapters: shrink packs to fit between the text column and the specs
     .to(stage.global, { cf: 1, duration: 0.5 }, 0.8);
 
-  // Chapter 1 — PU-40: full turn, then exploded view
+  // Chapter 1 — Princecol: full turn, then straight on to chapter 2 (exploded view removed)
   chIn(chapters[0], 1.0);
   tl.to(A, { ry: Math.PI * 2, s: 1.1, duration: 1.3, ease: 'power1.inOut' }, 1.2)
     .add(() => {}, 2.4);
   chOut(chapters[0], 2.4);
-  tl.to(A, { explode: 1, ry: Math.PI * 2 - 0.55, rx: 0.14, s: 0.74, y: 0.1, x: stage.mobile ? -2.8 : 0, duration: 0.8 }, 2.5)
-    .to(stage.global, { glow: 0.3, duration: 0.6 }, 2.5)
-    .fromTo('.xlabel', { opacity: 0 }, { opacity: 1, stagger: 0.12, duration: 0.3 }, 2.95)
-    .fromTo('.xlabel i', { scaleX: 0 }, { scaleX: 1, stagger: 0.12, duration: 0.35, ease: 'power3.out' }, 2.95)
-    .to('.xlabel', { opacity: 0, duration: 0.25, stagger: 0.05 }, 3.65)
-    .to(A, { explode: 0, rx: 0, ry: Math.PI * 2, s: 1, y: 0, x: 0, duration: 0.5 }, 3.7)
-    .to(stage.global, { glow: 0.55, duration: 0.5 }, 3.8);
 
   // → Chapter 2 — EPX-2 tube
   tl.to(A, { x: -2, ox: -1, z: -2, ry: Math.PI * 3, rz: 0.9, duration: 0.8, ease: 'power3.in' }, 4.15)
@@ -247,8 +240,13 @@ export function initShowcase(stage, products) {
   fitChapters();
   ScrollTrigger.addEventListener('refresh', fitChapters);
 
+  // close the scroll gap left by the removed exploded view
+  const CUT = 1.6, CUT_AT = 4.0;
+  const sh = (t) => (t >= CUT_AT ? t - CUT : t);
+  tl.getChildren(false, true, true).forEach((c) => { if (c.startTime() >= CUT_AT) c.startTime(c.startTime() - CUT); });
+
   // rail
-  const starts = [1.0, 4.75, 6.9, 9.0, 11.05];
+  const starts = [1.0, 4.75, 6.9, 9.0, 11.05].map(sh);
   const idx = document.getElementById('railIdx');
   const name = document.getElementById('railName');
   const bar = document.getElementById('railBar');
@@ -256,7 +254,7 @@ export function initShowcase(stage, products) {
   tl.eventCallback('onUpdate', () => {
     const t = tl.time();
     let i = 0; starts.forEach((s, k) => { if (t >= s - 0.2) i = k; });
-    if (t > 12.5) i = 5;
+    if (t > sh(12.5)) i = 5;
     if (i !== current) {
       current = i;
       idx.textContent = String(Math.min(i + 1, 5)).padStart(2, '0');

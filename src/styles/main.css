@@ -190,7 +190,7 @@ h1, h2, h3, p { margin: 0; }
 /* =========================================================
    2. SHOWCASE
    ========================================================= */
-.showcase { position: relative; z-index: 1; height: 760vh; }
+.showcase { position: relative; z-index: 1; height: 673vh; } /* 760vh minus the removed exploded-view step (1.6 of 14 timeline units) */
 .showcase__sticky { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
 .showcase__glow {
   position: absolute; inset: 0; pointer-events: none; opacity: 0;
@@ -553,7 +553,7 @@ h1, h2, h3, p { margin: 0; }
   .xlabel--left i::before { left: -4px; right: auto; }
   .xlabel small { display: none; }
   .xlabel span { font-size: 9.5px; }
-  .showcase { height: 640vh; }
+  .showcase { height: 567vh; }
 
   .section__head { display: flex; flex-direction: column; align-items: flex-start; gap: 22px; }
   .section__aside { justify-self: start; }
