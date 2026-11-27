@@ -70,6 +70,8 @@ export function initShowcase(stage, products) {
   const group = m
     ? { A: [-1.5, -0.95, 0.4, 0.5], D: [1.5, -0.95, 0.4, 0.5], B: [-2.9, -0.05, -1.4, 0.44], C: [0, -0.05, -1.4, 0.44], E: [2.9, -0.05, -1.4, 0.44] }
     : { A: [0.65, -0.62, 0.4, 0.58], D: [2.2, -0.62, 0.4, 0.58], B: [-0.1, 0.74, -1.5, 0.5], C: [1.4, 0.74, -1.5, 0.5], E: [2.9, 0.74, -1.5, 0.5] };
+  // portrait tablets (600–899px wide) use the phone layout, but there the packs looked tiny: scale the group up
+  if (m && window.innerWidth >= 600) Object.values(group).forEach((g) => { g[1] = (g[1] + 0.5) * 1.35 - 0.5; g[3] *= 1.35; });
   // Narrower desktops/tablets: the kx-squeezed group can slide under the "Five adhesives" heading and the
   // packs crowd each other. Only when that would happen, the stage lays the group out at its designed
   // spacing, scaled to fit the space right of the heading (global.gOn/gk/gQ, blended in by global.gf).
@@ -228,14 +230,19 @@ export function initShowcase(stage, products) {
     const unitPx = window.innerHeight / (2 * 8 * Math.tan((35 / 2) * (Math.PI / 180)));
     const packW = 2.4 * stage.base * unitPx * 1.45; // 1.45: the pouch swings and slides out while the pack turns
     const packH = 2.75 * stage.base * unitPx * 1.15;
-    let gw = Infinity, gh = Infinity;
+    let gw = Infinity, gh = Infinity, columns = false;
     chapters.forEach((ch) => {
       const l = ch.querySelector('.chapter__left').getBoundingClientRect();
       const r = ch.querySelector('.chapter__right').getBoundingClientRect();
-      if (stage.mobile) { gh = Math.min(gh, r.top - l.bottom + 24); gw = Math.min(gw, window.innerWidth - 24); }
+      // the CSS decides the layout: specs beside the text (columns) or below it (stacked)
+      const side = r.left >= l.right - 1;
+      columns = columns || side;
+      if (!side) { gh = Math.min(gh, r.top - l.bottom + 24); gw = Math.min(gw, window.innerWidth - 24); }
       else { gw = Math.min(gw, r.left - l.right + 24); gh = Math.min(gh, window.innerHeight * 0.8); }
     });
-    stage.global.chFit = Math.max(0.5, Math.min(1, gw / packW, gh / packH));
+    // landscape phones use the column layout with the small phone pack size — let the pack grow into the middle
+    const cap = stage.mobile && columns ? 1.6 : 1;
+    stage.global.chFit = Math.max(0.5, Math.min(cap, gw / packW, gh / packH));
   };
   fitChapters();
   ScrollTrigger.addEventListener('refresh', fitChapters);

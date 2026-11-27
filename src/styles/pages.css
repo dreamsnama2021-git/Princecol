@@ -1104,3 +1104,5 @@ body[data-page='about'] .cta-band__title { font-size: clamp(2.4rem, 5.4vw, 6rem)
   .phero .char { will-change: auto; }
   .phero .word { will-change: transform, opacity; }
 }
+/* product page overview photo zooms inside its own box (it used to spill past the screen edge on phones) */
+.pd-overview__media { overflow: hidden; }
