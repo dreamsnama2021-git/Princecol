@@ -1078,3 +1078,7 @@ body[data-page='about'] .cta-band__title { font-size: clamp(2.4rem, 5.4vw, 6rem)
 
 /* Products page: no per-product colour wash — neutral background, no coloured glow behind each pack */
 .pcoll .pslide__halo { display: none; }
+/* phones: a taller banner, the same on every page (about 2:3 portrait card) */
+@media (max-width: 899px) {
+  .ghero { min-height: 76vh; min-height: 76svh; align-items: center; }
+}
