@@ -1093,3 +1093,9 @@ body[data-page='about'] .cta-band__title { font-size: clamp(2.4rem, 5.4vw, 6rem)
 @media (max-width: 899px) {
   .ghero--packs .ghero__shade { background: radial-gradient(80% 60% at 50% 48%, rgba(8, 8, 10, 0.72), rgba(8, 8, 10, 0.5) 70%, rgba(8, 8, 10, 0.42)); }
 }
+/* phones: the section right after a page banner starts close to it (~48px), like the gaps elsewhere */
+@media (max-width: 899px) {
+  .ghero + .section { padding-top: 28px; }
+  .ghero + .pcoll { padding-top: 0; }
+  .ghero + .pcoll .pslide:first-of-type { padding-top: 28px; }
+}
