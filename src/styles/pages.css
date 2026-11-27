@@ -1085,3 +1085,11 @@ body[data-page='about'] .cta-band__title { font-size: clamp(2.4rem, 5.4vw, 6rem)
 /* banners can carry a separate phone image (<picture>): the picture box fills the card like the img did */
 .ghero__banner picture { display: block; width: 100%; height: 100%; }
 @media (max-width: 899px) { .ghero__banner picture img { object-position: 45% 40%; } }
+@media (max-width: 899px) {
+  .ghero--packs .ghero__banner picture img { object-position: 50% 50%; }
+  .ghero--contact .ghero__banner picture img { object-position: 50% 50%; }
+}
+/* the phone pack banner is busy behind the text: a slightly deeper shade there only */
+@media (max-width: 899px) {
+  .ghero--packs .ghero__shade { background: radial-gradient(80% 60% at 50% 48%, rgba(8, 8, 10, 0.72), rgba(8, 8, 10, 0.5) 70%, rgba(8, 8, 10, 0.42)); }
+}
