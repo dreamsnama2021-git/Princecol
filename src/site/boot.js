@@ -115,8 +115,21 @@ export function heroIntro(hero, { delay = 0.45 } = {}) {
   const title = hero.querySelector('[data-split]');
   if (title) splitChars(title, { masked: true });
   const tl = gsap.timeline({ delay });
-  if (title) tl.fromTo(title.querySelectorAll('.char'), { yPercent: 120, fontVariationSettings: "'wdth' 125" }, { yPercent: 0, fontVariationSettings: "'wdth' 62", stagger: 0.018, duration: 1.3, ease: 'expo.out' });
-  tl.from(hero.querySelectorAll('[data-hero-in]'), { y: 30, opacity: 0, stagger: 0.08, duration: 1, ease: 'power3.out' }, '-=0.9');
+  // Phones/tablets: animating font width ('wdth') per letter re-lays-out the whole heading every frame and
+  // stutters, so there the words simply rise and fade in (transform + opacity only, GPU-friendly).
+  const small = window.matchMedia('(max-width: 899px)').matches;
+  if (title && small) {
+    tl.fromTo(title.querySelectorAll('.word'), { y: 28, opacity: 0 }, { y: 0, opacity: 1, stagger: 0.06, duration: 0.9, ease: 'power3.out', force3D: true, clearProps: 'transform,opacity' });
+  } else if (title) {
+    tl.fromTo(title.querySelectorAll('.char'), { yPercent: 120, fontVariationSettings: "'wdth' 125" }, { yPercent: 0, fontVariationSettings: "'wdth' 62", stagger: 0.018, duration: 1.3, ease: 'expo.out' });
+  }
+  tl.from(hero.querySelectorAll('[data-hero-in]'), { y: small ? 20 : 30, opacity: 0, stagger: 0.08, duration: small ? 0.8 : 1, ease: 'power3.out', force3D: true }, small ? '-=0.6' : '-=0.9');
+  // phones: start once the banner photo is decoded, so decoding doesn't steal frames from the animation
+  const bannerImg = small && hero.querySelector('.ghero__banner img');
+  if (bannerImg && bannerImg.decode) {
+    tl.pause();
+    Promise.race([bannerImg.decode().catch(() => {}), new Promise((r) => setTimeout(r, 700))]).then(() => tl.play());
+  }
   // headline drifts up & fades as the page scrolls on
   if (!reduced && title) gsap.to(title, { yPercent: -18, opacity: 0.15, ease: 'none', scrollTrigger: { trigger: hero, start: 'top top', end: 'bottom top', scrub: 0.4 } });
   return tl;

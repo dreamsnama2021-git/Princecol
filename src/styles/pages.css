@@ -1099,3 +1099,8 @@ body[data-page='about'] .cta-band__title { font-size: clamp(2.4rem, 5.4vw, 6rem)
   .ghero + .pcoll { padding-top: 0; }
   .ghero + .pcoll .pslide:first-of-type { padding-top: 28px; }
 }
+/* phones: banner headings animate whole words, so letters don't need their own GPU layers */
+@media (max-width: 899px) {
+  .phero .char { will-change: auto; }
+  .phero .word { will-change: transform, opacity; }
+}
