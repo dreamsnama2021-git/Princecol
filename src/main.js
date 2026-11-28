@@ -5,12 +5,8 @@ import Lenis from 'lenis';
 import { brand, products, industries, stats, capabilities, features } from './data/content.js';
 import { Stage } from './gl/stage.js';
 import { initShowcase } from './sections/showcase.js';
-import { initRange, initRange2, initRangeSwitch } from './sections/range.js';
-import { icon } from './site/icons.js';
 import { initStory } from './sections/story.js';
-import { initIndustries } from './sections/industries.js';
 import { initWhy } from './sections/why.js';
-import { initFinale } from './sections/finale.js';
 import { initContact } from './sections/contact.js';
 import { initLinks, initNav, initCursor, initMagnetic, initReveals } from './ui/interactions.js';
 import { splitChars } from './ui/split.js';
@@ -50,7 +46,6 @@ async function boot() {
   // 3D stage
   let stage = null;
   // real product photography from princecol.com (transparent cut-outs)
-  const renders = Object.fromEntries(products.map((p) => [p.id, p.image]));
   try {
     stage = new Stage(document.getElementById('gl'), products);
     stage.global.intro = 0;
@@ -74,20 +69,9 @@ async function boot() {
 
   // sections
   document.querySelectorAll('.hero [data-split]').forEach((el) => splitChars(el, { masked: true }));
-  splitChars(document.querySelector('.finale__title'), { masked: true });
   if (stage) initShowcase(stage, products);
-  // Product Range: both layouts are built; the on-page "View" switch shows Showcase (option 1, default)
-  // or Cards (option 2). ?range=1|2 also picks one; the choice is kept for the visit.
-  initRange(products, renders, lenis);
-  const revealV2 = initRange2(products, icon);
-  const rq = new URLSearchParams(location.search).get('range');
-  let rangeView = rq === '1' || rq === '2' ? rq : null;
-  try { rangeView = rangeView || sessionStorage.getItem('pa-range'); } catch (e) { /* storage blocked */ }
-  initRangeSwitch(rangeView === '2' ? '2' : '1', revealV2);
   initStory(stats, capabilities);
-  initIndustries(industries, products, renders);
   initWhy(features);
-  initFinale();
   initContact(brand, products, industries);
   initThemeLinks();
   initLinks(lenis);

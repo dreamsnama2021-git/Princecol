@@ -373,7 +373,7 @@ export function initShowcase(stage, products) {
 
   // pause GL when the stage is covered
   ScrollTrigger.create({
-    trigger: '#products', start: 'top top', end: 'max',
+    trigger: '#technology', start: 'top top', end: 'max',
     onToggle: (self) => { stage.active = !self.isActive; },
   });
 }
