@@ -75,10 +75,7 @@ export function nav(active = 'home') {
 
   return `
   <header class="nav" id="nav">
-    <a href="/" class="nav__logo" aria-label="Principle Adhesives — home">
-      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="${LEAF}"/></svg>
-      <span>PRINCIPLE<small>Adhesives</small></span>
-    </a>
+    <a href="/" class="nav__logo nav__logo--img" aria-label="Principle Adhesives — home"><img class="nav__logo-img" src="/images/princecol/logo-princecol.png" alt="Princecol — The Adhesives Experts" width="465" height="190" decoding="async" /></a>
     <nav class="nav__links" aria-label="Primary">${links}</nav>
     <div class="nav__right">
       <a href="/contact/" class="btn btn--sm btn--line nav__cta" data-magnetic${active === 'contact' ? ' aria-current="page"' : ''}><span>Contact Us</span></a>
@@ -97,7 +94,7 @@ export function footer() {
   <footer class="footer">
     <div class="footer__top">
       <div class="footer__brand">
-        <a href="/" class="nav__logo" aria-label="Principle Adhesives — home"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${LEAF}"/></svg><span>PRINCIPLE<small>Adhesives</small></span></a>
+        <a href="/" class="nav__logo nav__logo--img footer__logo" aria-label="Principle Adhesives — home"><img class="nav__logo-img" src="/images/princecol/logo-princecol.png" alt="Princecol — The Adhesives Experts" width="465" height="190" loading="lazy" decoding="async" /></a>
         <p>${esc(brand.intro)}</p>
         <div class="footer__social">
           <a href="${brand.whatsapp}" target="_blank" rel="noopener" class="footer__pill mono">${icon('whatsapp', 'footer__ico')}WhatsApp</a>

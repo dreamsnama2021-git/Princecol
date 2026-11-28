@@ -975,3 +975,13 @@ small, .mega__cat, .fchip small, .viewer__count, .footer__pill { font-size: 12px
   .spec { padding: 8px 0; }
   .spec dd { font-size: 1.05rem; }
 }
+
+/* Princecol logo image (header + footer) */
+.nav__logo--img { gap: 0; line-height: 0; }
+.nav__logo-img { display: block; height: 44px; width: auto; }
+.footer__logo { justify-self: start; padding: 12px 16px; background: #fff; border-radius: 10px; }
+.footer__logo .nav__logo-img { height: 52px; }
+@media (max-width: 899px) {
+  .nav__logo-img { height: 36px; }
+  .footer__logo .nav__logo-img { height: 46px; }
+}
