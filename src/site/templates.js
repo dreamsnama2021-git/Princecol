@@ -13,7 +13,7 @@ export function head({ inner = true } = {}) {
   return `
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#0A0A0B" />
+  <meta name="theme-color" content="#F1EEE8" />
   <meta name="keywords" content="Acrylic Adhesive Manufacturers in Mumbai, Adhesive and Super Glue Manufacturers in Mumbai, Adhesive for Furniture Manufacturers in Mumbai, Eurocol Adhesive Manufacturers in Mumbai, Heat and Water Resistant Adhesive Manufacturers in Mumbai, Marine Grade Adhesive Manufacturers in Mumbai, Multigrip Adhesive Manufacturers in Mumbai, Plywood Adhesive Manufacturers in Mumbai, PVC Adhesive Manufacturers in Mumbai, Synthetic Resin Adhesive Exporter in Mumbai, Top Adhesive Manufacturers in Mumbai, Top Adhesive Suppliers Manufacturers in Mumbai, Wood Adhesive Manufacturers in Mumbai" />
   <meta property="og:site_name" content="Principle Adhesives" />
   <meta property="og:type" content="website" />
@@ -22,14 +22,9 @@ export function head({ inner = true } = {}) {
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,100..900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
   <script>
-    // Theme: ?theme=light|dark sets it for the visit (sessionStorage), so it carries across pages.
-    (function () {
-      var q = new URLSearchParams(location.search).get('theme');
-      try { if (q) sessionStorage.setItem('pa-theme', q); q = q || sessionStorage.getItem('pa-theme'); } catch (e) {}
-      var t = q === 'light' ? 'light' : 'dark';
-      document.documentElement.dataset.theme = t;
-      if (t === 'light') document.querySelector('meta[name="theme-color"]').setAttribute('content', '#F1EEE8');
-    })();
+    // The site has one theme (light). Set before paint; the old ?theme / saved choice no longer applies.
+    document.documentElement.dataset.theme = 'light';
+    try { sessionStorage.removeItem('pa-theme'); } catch (e) {}
   </script>
   <link rel="stylesheet" href="/src/styles/main.css" />
   ${inner ? '<link rel="stylesheet" href="/src/styles/pages.css" />' : ''}`;
@@ -86,14 +81,12 @@ export function nav(active = 'home') {
     </a>
     <nav class="nav__links" aria-label="Primary">${links}</nav>
     <div class="nav__right">
-      <a href="?theme=light" class="nav__theme mono" data-theme-link aria-label="Switch to light theme"><i aria-hidden="true"></i><span>Light</span></a>
       <a href="/contact/" class="btn btn--sm btn--line nav__cta" data-magnetic${active === 'contact' ? ' aria-current="page"' : ''}><span>Contact Us</span></a>
     </div>
     <button class="nav__burger" aria-label="Open menu" aria-expanded="false" aria-controls="menu"><span></span><span></span></button>
   </header>
   <div class="menu" id="menu" aria-hidden="true">
     <nav aria-label="Mobile">${mobile}</nav>
-    <a href="?theme=light" class="menu__theme mono" data-theme-link>Switch to <span>light</span> theme</a>
   </div>`;
 }
 
