@@ -1,4 +1,5 @@
 // Hero → Showcase choreography. Everything here is scrubbed by scroll.
+import * as THREE from 'three';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { splitChars } from '../ui/split.js';
@@ -54,9 +55,100 @@ export function initShowcase(stage, products) {
     Object.assign(A, { y: 0.25, s: 1 });
     Object.assign(B, { x: -5, y: 1.9, z: -4.5, s: 0.6 });
     Object.assign(C, { x: 5, y: -1.2, z: -4, s: 0.6 });
-    Object.assign(D, { x: -12, z: -9 });
-    Object.assign(E, { x: 12, z: -9 });
+    Object.assign(D, { x: -20, z: -9 });
+    Object.assign(E, { x: 20, z: -9 });
   }
+
+  /* The heading sits behind the packs (CSS). Packs keep their size; a pack that would cover heading
+     letters moves the shortest distance to a spot where it covers none — below the nav, on screen, clear
+     of the description/buttons and of the other packs where possible. Packs already clear don't move. */
+  const nudgeHero = () => {
+    const W = window.innerWidth, H = window.innerHeight;
+    const u = H / (2 * 8 * Math.tan((35 / 2) * (Math.PI / 180)));   // px per world unit at z = 0
+    const kx = stage.kx, mob = stage.mobile;
+    const ink = (el) => { const r = document.createRange(); r.selectNodeContents(el); return r.getBoundingClientRect(); };
+    const grow = (r, m) => ({ l: r.left - m, r: r.right + m, t: r.top - m, b: r.bottom + m });
+    // The heading letters are mid-intro here (shifted and wider), so measure where the words END UP:
+    // an invisible, un-animated copy of the heading laid over the same box.
+    const h1 = document.querySelector('.hero__title');
+    const ghost = h1.cloneNode(false);
+    ghost.removeAttribute('id');
+    ghost.setAttribute('aria-hidden', 'true');
+    ghost.innerHTML = '<span class="hero__line hero__line--a">Engineered to bond.</span><span class="hero__line hero__line--b">Built to last.</span>';
+    Object.assign(ghost.style, { position: 'absolute', left: h1.offsetLeft + 'px', top: h1.offsetTop + 'px', width: h1.offsetWidth + 'px', height: h1.offsetHeight + 'px', margin: '0', visibility: 'hidden' });
+    h1.parentElement.appendChild(ghost);
+    const lines = [...ghost.querySelectorAll('.hero__line')].map((el) => grow(ink(el), 12));
+    ghost.remove();
+    // everything readable is off-limits: both heading lines, the meta line, the description and the buttons
+    const texts = lines.concat(['.hero__meta', '.hero__lede', '.hero__ctas', '.hero__scroll']
+      .map((sel) => document.querySelector(sel))
+      .filter((el) => el && getComputedStyle(el).display !== 'none')
+      .map((el) => { const g = grow(el.getBoundingClientRect(), 10); g.t -= 30; return g; }));   // these rise 30px in their intro
+    const navB = (document.getElementById('nav')?.getBoundingClientRect().bottom || 70) + 4;
+    const hit = (a, b) => a.l < b.r && a.r > b.l && a.t < b.b && a.b > b.t;
+    const area = (a, b) => Math.max(0, Math.min(a.r, b.r) - Math.max(a.l, b.l)) * Math.max(0, Math.min(a.b, b.b) - Math.max(a.t, b.t));
+    const inside = (bx) => bx.t >= navB && bx.b <= H - 8 && bx.l >= 6 && bx.r <= W - 6;
+    const gap = (r, m) => ({ l: r.l - m, r: r.r + m, t: r.t - m, b: r.b + m });
+
+    // real on-screen box of a pack in its final hero pose (projected 3D bounds, plus room for its gentle sway)
+    const intro0 = stage.global.intro;
+    stage.global.intro = 1;
+    stage.camera.updateMatrixWorld();   // before the first render the camera matrices are still the defaults
+    const itemOf = (pr) => Object.values(stage.items).find((it) => it.proxy === pr);
+    const bb3 = new THREE.Box3(), v = new THREE.Vector3();
+    const measure = (pr) => {
+      const it = itemOf(pr);
+      stage.apply(0);
+      it.root.updateWorldMatrix(true, true);
+      bb3.setFromObject(it.root);
+      let l = Infinity, r = -Infinity, t = Infinity, b = -Infinity;
+      for (const x of [bb3.min.x, bb3.max.x]) for (const y of [bb3.min.y, bb3.max.y]) for (const z of [bb3.min.z, bb3.max.z]) {
+        v.set(x, y, z).project(stage.camera);
+        const sx = (v.x + 1) / 2 * W, sy = (1 - v.y) / 2 * H;
+        l = Math.min(l, sx); r = Math.max(r, sx); t = Math.min(t, sy); b = Math.max(b, sy);
+      }
+      return { cx: (l + r) / 2, cy: (t + b) / 2, w: (r - l) * 1.32, h: (b - t) * 1.12 };   // room for the idle sway
+    };
+
+    const placed = [];
+    [A, B, C, E, D].forEach((pr) => {
+      if (Math.abs(pr.x) > 9) return; // waiting off-stage (phones)
+      const m = measure(pr);
+      const P = 8 / (8 - pr.z);
+      const boxK = (cx, cy, k) => ({ l: cx - (m.w * k) / 2, r: cx + (m.w * k) / 2, t: cy - (m.h * k) / 2, b: cy + (m.h * k) / 2 });
+      // keeps its original place and size when clear of all text, of the other packs and of the screen edges
+      const clear = (bx) => !texts.some((t) => hit(bx, t)) && !placed.some((pb) => hit(gap(bx, 14), pb)) && inside(bx);
+      if (clear(boxK(m.cx, m.cy, 1))) { placed.push(boxK(m.cx, m.cy, 1)); return; }
+      // otherwise the nearest clear spot (move first; shrink at most 38% only if no full-size spot exists);
+      // (if no spot is clear of text and of the other packs, the pack waits off-stage — see below)
+      let best = null;
+      for (const k of [1, 0.93, 0.86, 0.8, 0.74, 0.68, 0.62]) {
+        const w = m.w * k, h = m.h * k;
+        for (let cy = navB + h / 2; cy <= H - 8 - h / 2; cy += 8) {
+          for (let cx = 6 + w / 2; cx <= W - 6 - w / 2; cx += 10) {
+            const bx = boxK(cx, cy, k);
+            const dx = cx - m.cx, dy = cy - m.cy;
+            const textHit = texts.reduce((sum, t) => sum + area(bx, t), 0);
+            const packHit = placed.reduce((sum, pb) => sum + area(gap(bx, 14), pb), 0);
+            const cost = textHit * 1e6 + packHit * 1e3 + dx * dx + dy * dy + (1 - k) * (1 - k) * W * W * 0.6;
+            if (!best || cost < best.cost) best = { cost, cx, cy, k, ok: textHit === 0 && packHit === 0 };
+          }
+        }
+        if (best && best.ok && best.k === 1) break;   // a full-size clear spot exists: never shrink
+      }
+      // no spot clear of text AND of the other packs even at 62%: wait off-stage rather than overlap
+      if (!best || !best.ok) { Object.assign(pr, { x: (m.cx < W / 2 ? -1 : 1) * 20, z: -9 }); return; }
+      // move the pack by the screen offset (converted to world units at its depth) and apply the size
+      pr.x += (best.cx - m.cx) / (u * P) / kx;
+      const dyW = -(best.cy - m.cy) / (u * P);
+      pr.y += mob ? dyW / 0.9 : dyW;
+      pr.s *= best.k;
+      placed.push(boxK(best.cx, best.cy, best.k));
+    });
+    stage.global.intro = intro0;
+    stage.apply(0);
+  };
+  nudgeHero();
 
   if (stage.reduced) return reducedMode(stage, P, chapters, products);
 

@@ -985,3 +985,27 @@ small, .mega__cat, .fchip small, .viewer__count, .footer__pill { font-size: 12px
   .nav__logo-img { height: 36px; }
   .footer__logo .nav__logo-img { height: 46px; }
 }
+
+
+
+
+/* Landscape phones: size the hero by the short height so heading, packs and buttons all fit one screen */
+@media (max-width: 899px) and (orientation: landscape) and (max-height: 520px) {
+  .hero { min-height: 0; height: 100svh; }
+  .hero__title { font-size: clamp(2rem, 10.5vh, 3.6rem); padding-top: 62px; }
+  .hero__foot { flex-direction: row; align-items: flex-end; justify-content: space-between; gap: 16px; padding-top: 10px; padding-bottom: 14px; }
+  .hero__lede { font-size: 14px; max-width: 300px; }
+  .hero__foot .hero__ctas { margin-left: auto; width: auto; }
+}
+
+/* Hero: original layout (scattered packs, heading lines top and middle-right). The big heading sits
+   BEHIND the 3D packs; showcase.js places the packs in the free spots around the words so the text
+   stays readable. Description, meta and buttons stay in front of the canvas. */
+.hero { z-index: auto; }
+.hero__title { position: relative; z-index: -1; }
+.hero__foot { z-index: 1; }
+.hero__scroll { z-index: 1; }
+/* hero heading a little smaller (was 11.6vw / 15vw on phones) — more room for the packs around it */
+.hero__title { font-size: clamp(3rem, 9.8vw, 12rem); }
+@media (max-width: 899px) { .hero__title { font-size: clamp(2.6rem, 13vw, 6rem); } }
+@media (max-width: 899px) and (orientation: landscape) and (max-height: 520px) { .hero__title { font-size: clamp(2rem, 10.5vh, 3.6rem); } }
